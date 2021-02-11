@@ -1,13 +1,14 @@
 ---
 version: 1
 applications:
-- name: stress-test-v0
+- name: stress-test-v1
   memory: 1024M
   disk_quota: 1024M
   instances: 1
   env:
     BUFFER_RAW : 150000
     TIMEOUT_SEC : 30
+    SLEEP_MILLISEC : 10
     FILENAME_PREFIX : "xxx"
   services:
    - test-log-drain-stress

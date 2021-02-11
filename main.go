@@ -33,6 +33,13 @@ fmt.Println(TIMEOUT_SEC)
 var INDEX = os.Getenv("CF_INSTANCE_INDEX")
 
 
+SLEEP_MILLISEC, err := strconv.ParseInt(os.Getenv("SLEEP_MILLISEC"), 0, 64)
+if err != nil {
+    panic(err)
+}
+fmt.Println("SLEEP_MILLISEC: ",SLEEP_MILLISEC)
+
+
 var application_data map[string]interface{}
 
 var i int
@@ -81,7 +88,7 @@ currentTime := now.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 
 
-fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,TIMEOUT_SEC,i,INDEX,application_name,currentTime)
+fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MILLISEC,i,INDEX,application_name,currentTime)
 
 i++
 
@@ -97,7 +104,7 @@ fmt.Printf("%d raw data generated - Logging - FISNISHEDTEST STRESS\n",i)
 ////////////////
 }()
 
-//time.Sleep(60* time.Second)
+time.Sleep(SLEEP_MILLISEC* time.Millisecond)
 
 handler:= NewSyslog(10)
 
