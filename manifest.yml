@@ -1,7 +1,7 @@
 ---
 version: 1
 applications:
-- name: stress-test-v1
+- name: stress-test-v0
   memory: 1024M
   disk_quota: 1024M
   instances: 1
