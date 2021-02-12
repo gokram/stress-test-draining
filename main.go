@@ -88,7 +88,7 @@ currentTime := now.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 
 
-fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MILLISEC,i,INDEX,application_name,currentTime)
+fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,currentTime)
 
 i++
 
