@@ -8,7 +8,7 @@ applications:
   env:
     BUFFER_RAW : 150000
     TIMEOUT_SEC : 30
-    SLEEP_MILLISEC : 10
+    SLEEP_MICROSEC : 245
     FILENAME_PREFIX : "xxx"
   services:
    - test-log-drain-stress

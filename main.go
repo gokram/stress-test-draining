@@ -33,11 +33,11 @@ fmt.Println(TIMEOUT_SEC)
 var INDEX = os.Getenv("CF_INSTANCE_INDEX")
 
 
-SLEEP_MILLISEC, err := strconv.ParseInt(os.Getenv("SLEEP_MILLISEC"), 0, 64)
+SLEEP_MICROSEC, err := strconv.ParseInt(os.Getenv("SLEEP_MICROSEC"), 0, 64)
 if err != nil {
     panic(err)
 }
-fmt.Println("SLEEP_MILLISEC: ",SLEEP_MILLISEC)
+fmt.Println("SLEEP_MICROSEC: ",SLEEP_MICROSEC)
 
 
 var application_data map[string]interface{}
@@ -92,7 +92,8 @@ fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MILLISEC,
 
 i++
 
-//time.Sleep(1* time.Second)
+time.Sleep(SLEEP_MICROSEC* time.Microsecond)
+
         } //end select  
 
 //fmt.Println("BUILDBATCH - Exited SELECT")
@@ -104,7 +105,7 @@ fmt.Printf("%d raw data generated - Logging - FISNISHEDTEST STRESS\n",i)
 ////////////////
 }()
 
-time.Sleep(SLEEP_MILLISEC* time.Millisecond)
+
 
 handler:= NewSyslog(10)
 
