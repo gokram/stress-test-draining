@@ -10,6 +10,8 @@ applications:
     TIMEOUT_SEC : 30
     FILENAME_PREFIX : "xxx"
   services:
-   - test-log-drain-stress
    - stress-test-logging
+   - test-log-drain-stress
+   - tegon-syslog-drain
+
 
