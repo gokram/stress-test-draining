@@ -11,6 +11,6 @@ applications:
     SLEEP_MICROSEC : 245
     FILENAME_PREFIX : "xxx"
   services:
-   - test-log-drain-stress
+   - test-log-drain-stress-v1
    - stress-test-logging
 
