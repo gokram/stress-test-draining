@@ -92,8 +92,8 @@ fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,
 
 i++
 
-time.Sleep(SLEEP_MICROSEC* time.Microsecond)
-
+time.Sleep(time.Duration(SLEEP_MICROSEC)* time.Microsecond)
+//time.Sleep(SLEEP_MICROSEC* time.Microsecond)
         } //end select  
 
 //fmt.Println("BUILDBATCH - Exited SELECT")
