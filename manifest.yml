@@ -1,16 +1,17 @@
 ---
 version: 1
 applications:
-- name: stress-test-v1
+- name: stress-test-v2
   memory: 1024M
   disk_quota: 1024M
   instances: 1
   env:
     BUFFER_RAW : 150000
     TIMEOUT_SEC : 30
-    SLEEP_MICROSEC : 245
+    SLEEP_MICROSEC : 6000
     FILENAME_PREFIX : "xxx"
+    URL : https://ORG_NAME-SPACE_NAME-goLog-v4.cfapps.eu10.hana.ondemand.com
   services:
    - test-log-drain-stress-v1
-   - stress-test-logging
+
 

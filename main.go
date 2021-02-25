@@ -39,6 +39,7 @@ if err != nil {
 }
 fmt.Println("SLEEP_MICROSEC: ",SLEEP_MICROSEC)
 
+var URL = os.Getenv("URL")
 
 var application_data map[string]interface{}
 
@@ -61,6 +62,15 @@ fmt.Println("TEST NEW JSON :  -> space_name:", space_name)
 
 
 go func() {
+
+
+/// Client fasthttp
+
+client          *fasthttp.Client
+
+
+client := httpClient()
+
 
 /////// NEW PART
 
@@ -87,8 +97,26 @@ for timeout := time.After(time.Second * time.Duration(TIMEOUT_SEC)); ; {
 currentTime := now.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 
+msg= "MM_TRACE " + batchid + " " + SLEEP_MICROSEC + " " + i + " " + INDEX + " " + application_name  + " " + currentTime + " Generated_log"
+///fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,currentTime)
 
-fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,currentTime)
+		req := fasthttp.AcquireRequest()
+		req.SetRequestURI(URL)
+		req.Header.SetMethod("POST")
+		req.Header.SetContentType("text/plain")
+		req.SetBody(msg)
+
+		resp := fasthttp.AcquireResponse()
+
+		err := w.client.Do(req, resp)
+
+		if err != nil {
+			return fmt.Errorf("error %d ", err)
+		}
+
+		if resp.StatusCode() < 200 || resp.StatusCode() > 299 {
+			return fmt.Errorf("syslog Writer: Post responded with %d status code", resp.StatusCode())
+		}
 
 i++
 
@@ -125,6 +153,18 @@ type Handler struct {
 func NewSyslog(BUFFER_RAW int64) *Handler {
 	return &Handler{
 		messages: make(chan string,BUFFER_RAW),
+	}
+}
+
+// FUNCTION FASTHTTP
+
+func httpClient() *fasthttp.Client {
+	return &fasthttp.Client{
+		MaxConnsPerHost:     5,
+		MaxIdleConnDuration: 90 * time.Second,
+		
+		ReadTimeout:         20 * time.Second,
+		WriteTimeout:        20 * time.Second,
 	}
 }
 
