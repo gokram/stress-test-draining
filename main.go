@@ -11,6 +11,8 @@ import (
 	"encoding/json"
 	"strconv"
 
+"github.com/valyala/fasthttp"
+
 )
 
 
@@ -66,10 +68,9 @@ go func() {
 
 /// Client fasthttp
 
-client          *fasthttp.Client
+var w HTTPSWriter
 
-
-client := httpClient()
+w.client = httpClient()
 
 
 /////// NEW PART
@@ -97,25 +98,31 @@ for timeout := time.After(time.Second * time.Duration(TIMEOUT_SEC)); ; {
 currentTime := now.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 
-msg= "MM_TRACE " + batchid + " " + SLEEP_MICROSEC + " " + i + " " + INDEX + " " + application_name  + " " + currentTime + " Generated_log"
-///fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,currentTime)
+//var msg = "MM_TRACE " + "batchid" + " " + "SLEEP_MICROSEC" + " " + i + " " + INDEX + " " + application_name  + " " + currentTime + " Generated_log"
+
+msg := fmt.Sprintf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,currentTime)
+
+
+
+//var msg = "stress test fasthtp body"
 
 		req := fasthttp.AcquireRequest()
 		req.SetRequestURI(URL)
 		req.Header.SetMethod("POST")
 		req.Header.SetContentType("text/plain")
-		req.SetBody(msg)
+		req.SetBody([]byte(msg))
 
 		resp := fasthttp.AcquireResponse()
 
 		err := w.client.Do(req, resp)
 
+
 		if err != nil {
-			return fmt.Errorf("error %d ", err)
+			 fmt.Errorf("error %d ", err)
 		}
 
 		if resp.StatusCode() < 200 || resp.StatusCode() > 299 {
-			return fmt.Errorf("syslog Writer: Post responded with %d status code", resp.StatusCode())
+			fmt.Errorf("syslog Writer: Post responded with %d status code", resp.StatusCode())
 		}
 
 i++
@@ -157,6 +164,13 @@ func NewSyslog(BUFFER_RAW int64) *Handler {
 }
 
 // FUNCTION FASTHTTP
+
+
+type HTTPSWriter struct {
+
+	client          *fasthttp.Client
+
+}
 
 func httpClient() *fasthttp.Client {
 	return &fasthttp.Client{
