@@ -8,7 +8,7 @@ applications:
   env:
     BUFFER_RAW : 150000
     TIMEOUT_SEC : 30
-    SLEEP_MICROSEC : 6000
+    SLEEP_MICROSEC : 5
     FILENAME_PREFIX : "xxx"
     URL : https://ORG_NAME-SPACE_NAME-goLog-v4.cfapps.eu10.hana.ondemand.com
   services:

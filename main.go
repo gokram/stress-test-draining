@@ -77,8 +77,13 @@ w.client = httpClient()
 
     fmt.Println("Logging - START TEST STRESS")
 
+startT := time.Now()
+	
 	now := time.Now()
 	batchid := now.Format("20060102150405")
+
+
+//fmt.Printf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name)
 	
 // LOOP FOR SOME SECONDS
 
@@ -93,18 +98,17 @@ for timeout := time.After(time.Second * time.Duration(TIMEOUT_SEC)); ; {
         default:
 
 	now := time.Now()
-	//currentTime := now.Format("20060102150405")
-
-currentTime := now.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 
-//var msg = "MM_TRACE " + "batchid" + " " + "SLEEP_MICROSEC" + " " + i + " " + INDEX + " " + application_name  + " " + currentTime + " Generated_log"
-
-msg := fmt.Sprintf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,currentTime)
+reqT :=now
+requestTime := now.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 
 
-//var msg = "stress test fasthtp body"
+msg := fmt.Sprintf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_MICROSEC,i,INDEX,application_name,requestTime)
+//msg := fmt.Sprintf("hello fasthttp %d",i)
+
+
 
 		req := fasthttp.AcquireRequest()
 		req.SetRequestURI(URL)
@@ -125,17 +129,26 @@ msg := fmt.Sprintf("MM_TRACE %s %d %d %s %s %s Generated_log\n ",batchid,SLEEP_M
 			fmt.Errorf("syslog Writer: Post responded with %d status code", resp.StatusCode())
 		}
 
+resT :=time.Now()
+ responseTime  := resT.Format("2006-01-02T15:04:05.999999999Z07:00")
+
+rtt := resT.Sub(reqT)
+diff_millisecond := int64(rtt/time.Millisecond)
+fmt.Printf("msg %d - [ request %s] [ response %s ]  [RTT %d]\n", i, requestTime, responseTime, diff_millisecond)
+
 i++
 
 time.Sleep(time.Duration(SLEEP_MICROSEC)* time.Microsecond)
-//time.Sleep(SLEEP_MICROSEC* time.Microsecond)
+
         } //end select  
 
 //fmt.Println("BUILDBATCH - Exited SELECT")
 
     } //end fortimeout/loop
 
-fmt.Printf("%d raw data generated - Logging - FISNISHEDTEST STRESS\n",i)
+endT := time.Now()
+elapsedT :=endT.Sub(startT)
+fmt.Printf("Index %s  - %d raw data generated - [Elapsed %s] - Logging - FISNISHEDTEST STRESS\n",INDEX,i, elapsedT)
 
 ////////////////
 }()
