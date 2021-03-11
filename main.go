@@ -47,6 +47,7 @@ var application_data map[string]interface{}
 
 var i int
 
+
 err_2 := json.Unmarshal([]byte(vcap_application), &application_data)
 
 	if err_2 != nil {
@@ -72,6 +73,7 @@ var w HTTPSWriter
 
 w.client = httpClient()
 
+var sum float64
 
 /////// NEW PART
 
@@ -133,8 +135,9 @@ resT :=time.Now()
  responseTime  := resT.Format("2006-01-02T15:04:05.999999999Z07:00")
 
 rtt := resT.Sub(reqT)
-diff_millisecond := int64(rtt/time.Millisecond)
-fmt.Printf("msg %d - [ request %s] [ response %s ]  [RTT %d]\n", i, requestTime, responseTime, diff_millisecond)
+diff_millisecond := float64(rtt/time.Millisecond)
+sum = sum+diff_millisecond
+fmt.Printf("msg %d - [ request %s] [ response %s ]  [RTT %f]\n", i, requestTime, responseTime, diff_millisecond)
 
 i++
 
@@ -148,7 +151,9 @@ time.Sleep(time.Duration(SLEEP_MICROSEC)* time.Microsecond)
 
 endT := time.Now()
 elapsedT :=endT.Sub(startT)
-fmt.Printf("Index %s  - %d raw data generated - [Elapsed %s] - Logging - FISNISHEDTEST STRESS\n",INDEX,i, elapsedT)
+avg_rtt:= float64(sum / float64(i+1))
+avg_msg_sec:= (int64(i+1)/int64(TIMEOUT_SEC))
+fmt.Printf("Summary for App Index %s - [%d raw data generated] [Average Throughput %d msg/sec ]- [Elapsed %s ms] [Average RTT %f ms ] - Logging - FISNISHEDTEST STRESS\n",INDEX,i,avg_msg_sec, elapsedT, avg_rtt)
 
 ////////////////
 }()
@@ -187,7 +192,7 @@ type HTTPSWriter struct {
 
 func httpClient() *fasthttp.Client {
 	return &fasthttp.Client{
-		MaxConnsPerHost:     5,
+		MaxConnsPerHost:     1,
 		MaxIdleConnDuration: 90 * time.Second,
 		
 		ReadTimeout:         20 * time.Second,
