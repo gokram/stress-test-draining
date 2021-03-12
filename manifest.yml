@@ -11,6 +11,6 @@ applications:
     FILENAME_PREFIX : "xxx"
   services:
    - stress-test-logging
-   - tegon-syslog-drain
+   - test-log-drain-stress-v1
 
 
